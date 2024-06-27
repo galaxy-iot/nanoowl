@@ -37,6 +37,9 @@ def draw_owl_output(image, output: OwlDecodeOutput, text: List[str], draw_text=T
     is_pil = not isinstance(image, np.ndarray)
     if is_pil:
         image = np.asarray(image)
+
+    img = image.clone()
+
     font = cv2.FONT_HERSHEY_SIMPLEX
     font_scale = 0.75
     colors = get_colors(len(text))
@@ -49,7 +52,7 @@ def draw_owl_output(image, output: OwlDecodeOutput, text: List[str], draw_text=T
         pt0 = (box[0], box[1])
         pt1 = (box[2], box[3])
         cv2.rectangle(
-            image,
+            img,
             pt0,
             pt1,
             colors[label_index],
@@ -60,7 +63,7 @@ def draw_owl_output(image, output: OwlDecodeOutput, text: List[str], draw_text=T
             offset_x = 0
             label_text = text[label_index]
             cv2.putText(
-                image,
+                img,
                 label_text,
                 (box[0] + offset_x, box[1] + offset_y),
                 font,
@@ -69,6 +72,7 @@ def draw_owl_output(image, output: OwlDecodeOutput, text: List[str], draw_text=T
                 2,# thickness
                 cv2.LINE_AA
             )
+            
     if is_pil:
-        image = PIL.Image.fromarray(image)
+        image = PIL.Image.fromarray(img)
     return image

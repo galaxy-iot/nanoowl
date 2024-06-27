@@ -27,7 +27,6 @@ from nanoowl.owl_drawing import (
 
 
 if __name__ == "__main__":
-
     parser = argparse.ArgumentParser()
     parser.add_argument("--image", type=str, default="../assets/owl_glove_small.jpg")
     parser.add_argument("--prompt", type=str, default="[an owl, a glove]")
@@ -51,7 +50,6 @@ if __name__ == "__main__":
         thresholds = [float(x) for x in thresholds]
     print(thresholds)
     
-
     predictor = OwlPredictor(
         args.model,
         image_encoder_engine=args.image_encoder_engine
@@ -61,13 +59,19 @@ if __name__ == "__main__":
     
     text_encodings = predictor.encode_text(text)
 
-    output = predictor.predict(
-        image=image, 
-        text=text, 
-        text_encodings=text_encodings,
-        threshold=thresholds,
-        pad_square=False
-    )
+    while True:
+        start_time = time.time()
+
+        output = predictor.predict(
+            image=image, 
+            text=text, 
+            text_encodings=text_encodings,
+            threshold=thresholds,
+            pad_square=False
+        )
+        end_time= time.time()
+
+        print(end_time-start_time)
 
     if args.profile:
         torch.cuda.current_stream().synchronize()
@@ -85,6 +89,5 @@ if __name__ == "__main__":
         dt = (t1 - t0) / 1e9
         print(f"PROFILING FPS: {args.num_profiling_runs/dt}")
 
-    image = draw_owl_output(image, output, text=text, draw_text=True)
-
-    image.save(args.output)
+    #image = draw_owl_output(image, output, text=text, draw_text=True)
+    #image.save(args.output)
