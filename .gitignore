@@ -5,3 +5,7 @@ charmap.json.gz
 sandbox
 
 torch2trt
+
+build
+dist
+*.onnx
